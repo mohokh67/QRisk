@@ -122,8 +122,7 @@
                             <article class="tile is-child notification is-warning">
                                 <h2 class="title is-2">Clinical information</h2>
 
-                                <fieldset>
-                                    <legend>Clinical information</legend>
+
                                     <table>
                                         <tr>
                                             <td>Smoking status:</td>
@@ -253,7 +252,7 @@
                                             </table>
                                         </fieldset>
                                     </fieldset>
-                                </fieldset>
+
 
                             </article>
 

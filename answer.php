@@ -3,35 +3,30 @@
 echo '<pre>';
 
 print_r($_POST);
-$sex = $_POST['sex'];
-$age = $_POST['age'];
+$sex                    = $_POST['sex'];
+$age                    = $_POST['age'];
+$ethrisk                = $_POST['ethnicity'];
+$postcode               = $_POST['postcode'];
+$smoke_cat              = $_POST['smoke_cat'];
+$diabetes_cat           = $_POST['diabetes_cat'];
+$fh_cvd                 = ($_POST['fh_cvd']) ? 1 : 0;
+$b_renal                = ($_POST['b_renal']) ? 1 : 0;
+$b_AF                   = ($_POST['b_AF']) ? 1 : 0;
+$b_treatedhyp           = ($_POST['b_treatedhyp']) ? 1 : 0;
+$b_migraine             = ($_POST['b_migraine']) ? 1 : 0;
+$b_ra                   = ($_POST['b_ra']) ? 1 : 0;
+$b_sle                  = ($_POST['b_sle']) ? 1 : 0;
+$b_semi                 = ($_POST['b_semi']) ? 1 : 0;
+$b_atypicalantipsy      = ($_POST['b_atypicalantipsy']) ? 1 : 0;
+$b_corticosteroids      = ($_POST['b_corticosteroids']) ? 1 : 0;
+$b_impotence2           = ($_POST['b_impotence2']) ? 1 : 0;
+$rati                   = ($_POST['rati']) ?? 0;
+$sbp                    = ($_POST['sbp']) ?? 0;
+$sbps5                  = ($_POST['sbps5']) ?? 0;
+$height                 = $_POST['height'];
+$weight                 = $_POST['weight'];
+$bmi                    = BMI($weight, $height);
 
-$ethrisk = $_POST['ethnicity'];
-$postcode = $_POST['postcode'];
-$smoke_cat = $_POST['smoke_cat'];
-$diabetes_cat = $_POST['diabetes_cat'];
-$fh_cvd = ($_POST['fh_cvd']) ? 1 : 0;
-$b_renal = ($_POST['b_renal']) ? 1 : 0;
-$b_AF = ($_POST['b_AF']) ? 1 : 0;
-$b_treatedhyp = ($_POST['b_treatedhyp']) ? 1 : 0;
-$b_migraine = ($_POST['b_migraine']) ? 1 : 0;
-$b_ra = ($_POST['b_ra']) ? 1 : 0;
-$b_sle = ($_POST['b_sle']) ? 1 : 0;
-$b_semi = ($_POST['b_semi']) ? 1 : 0;
-$b_atypicalantipsy = ($_POST['b_atypicalantipsy']) ? 1 : 0;
-$b_corticosteroids = ($_POST['b_corticosteroids']) ? 1 : 0;
-$b_impotence2 = ($_POST['b_impotence2']) ? 1 : 0;
-$rati = ($_POST['rati']) ?? 0;
-$sbp = ($_POST['sbp']) ?? 0;
-$sbps5 = ($_POST['sbps5']) ?? 0;
-$height = $_POST['height'];
-$weight = $_POST['weight'];
-
-
-
-
-
-$bmi =  BMI($weight, $height);
 $b_type1 = $b_type2 = 0;
 switch ($diabetes_cat){
     case 1:
@@ -42,11 +37,11 @@ switch ($diabetes_cat){
         break;
 }
 
-$ethrisk = 1;
+$result = femaleRisk( $age,$b_AF,$b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra,$b_renal,$b_semi, $b_sle, $b_treatedhyp, $b_type1,$b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, 11, 0);
 
-$result = femaleRisk( $age,$b_AF,$b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra,$b_renal,$b_semi, $b_sle, $b_treatedhyp, $b_type1,$b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, 10, 0);
-
+echo '<hr>result is: ';
 print_r($result);
+echo '<hr>';
 
 function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra, $b_renal, $b_semi, $b_sle, $b_treatedhyp, $b_type1, $b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, $surv = 10, $town = 0)
 {
@@ -122,7 +117,6 @@ function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_mig
 
     $a += $Iethrisk[$ethrisk];
     $a += $Ismoke[$smoke_cat];
-
 	/* Sum from continuous values */
 
     $a += $age_1 * -8.1388109247726188000000000;
@@ -185,9 +179,10 @@ function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_mig
     $a += $age_2 * $fh_cvd * -0.0768850516984230380000000;
     $a += $age_2 * $sbp * -0.0015082501423272358000000;
     $a += $age_2 * $town * -0.0315934146749623290000000;
-
+    echo "6 a is $a <br>";
 	/* Calculate the score itself */
     $score = 100.0 * (1 - pow($survivor[$surv], exp($a)) );
+
 	return $score;
 }
 
