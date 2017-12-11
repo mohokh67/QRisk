@@ -3,11 +3,11 @@
 echo '<pre>';
 
 print_r($_POST);
-$error = array();
+$error = [];
 $sex                    = $_POST['sex'];
 $age                    = $_POST['age'];
 if ($age < 25 && $age > 84) {
-    $error[] = "Age: enter an integer between 25 and 84";
+    $error[] = "Age: enter an integer between 25 and 84 - You have entered $age";
 }
 $ethrisk                = $_POST['ethnicity'];
 $smoke_cat              = $_POST['smoke_cat'];
@@ -25,27 +25,27 @@ $b_corticosteroids      = isset($_POST['b_corticosteroids']) ? 1 : 0;
 $b_impotence2           = isset($_POST['b_impotence2']) ? 1 : 0;
 
 $rati                   = ($_POST['rati']) ?? 0;
-if ($rati < 1 && $rati > 11) {
-    $error[] = "Cholesterol/HDL ratio: either leave blank or enter a number between 1.0 and 11.0";
+if ($rati < 1 || $rati > 11) {
+    $error[] = "Cholesterol/HDL ratio: either leave blank or enter a number between 1.0 and 11.0 - You have entered $rati";
 }
 
 $sbp                    = ($_POST['sbp']) ?? 0;
-if ($rati < 70 && $rati > 210) {
-    $error[] = "Systolic blood pressure: either leave blank or enter an integer between 70 and 210";
+if ($sbp < 70 || $sbp > 210) {
+    $error[] = "Systolic blood pressure: either leave blank or enter an integer between 70 and 210 - You have entered $sbp";
 }
 
 $sbps5                  = ($_POST['sbps5']) ?? 0;
-if ($rati < 0 && $rati > 40) {
-    $error[] = "Standard deviation of SBP: either leave blank or enter a value between 0.0 and 40.0";
+if ($sbps5 < 0 || $sbps5 > 40) {
+    $error[] = "Standard deviation of SBP: either leave blank or enter a value between 0.0 and 40.0 - You have entered $sbps5";
 }
 
 $height                 = isset($_POST['height']) ?? 0;
-if ($height < 140 && $height > 210) {
-    $error[] = "Height: enter an integer between 140 and 210";
+if ($height < 140 || $height > 210) {
+    $error[] = "Height: enter an integer between 140 and 210 -  - You have entered $height";
 }
 $weight                 = isset($_POST['weight']) ?? 0;
-if ($weight < 40 && $weight > 180) {
-    $error[] = "Weight: enter an integer between 40 and 180";
+if ($weight < 40 || $weight > 180) {
+    $error[] = "Weight: enter an integer between 40 and 180 - You have entered $weight";
 }
 
 if ($height xor $weight) {
@@ -65,6 +65,11 @@ switch ($diabetes_cat) {
     case 2:
         $b_type2 = 1;
         break;
+}
+
+if (count($error)) {
+    print_r($error);
+    die();
 }
 
 
