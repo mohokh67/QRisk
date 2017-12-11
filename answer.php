@@ -6,20 +6,19 @@ print_r($_POST);
 $sex                    = $_POST['sex'];
 $age                    = $_POST['age'];
 $ethrisk                = $_POST['ethnicity'];
-$postcode               = $_POST['postcode'];
 $smoke_cat              = $_POST['smoke_cat'];
 $diabetes_cat           = $_POST['diabetes_cat'];
-$fh_cvd                 = ($_POST['fh_cvd']) ? 1 : 0;
-$b_renal                = ($_POST['b_renal']) ? 1 : 0;
-$b_AF                   = ($_POST['b_AF']) ? 1 : 0;
-$b_treatedhyp           = ($_POST['b_treatedhyp']) ? 1 : 0;
-$b_migraine             = ($_POST['b_migraine']) ? 1 : 0;
-$b_ra                   = ($_POST['b_ra']) ? 1 : 0;
-$b_sle                  = ($_POST['b_sle']) ? 1 : 0;
-$b_semi                 = ($_POST['b_semi']) ? 1 : 0;
-$b_atypicalantipsy      = ($_POST['b_atypicalantipsy']) ? 1 : 0;
-$b_corticosteroids      = ($_POST['b_corticosteroids']) ? 1 : 0;
-$b_impotence2           = ($_POST['b_impotence2']) ? 1 : 0;
+$fh_cvd                 = isset($_POST['fh_cvd']) ? 1 : 0;
+$b_renal                = isset($_POST['b_renal']) ? 1 : 0;
+$b_AF                   = isset($_POST['b_AF']) ? 1 : 0;
+$b_treatedhyp           = isset($_POST['b_treatedhyp']) ? 1 : 0;
+$b_migraine             = isset($_POST['b_migraine']) ? 1 : 0;
+$b_ra                   = isset($_POST['b_ra']) ? 1 : 0;
+$b_sle                  = isset($_POST['b_sle']) ? 1 : 0;
+$b_semi                 = isset($_POST['b_semi']) ? 1 : 0;
+$b_atypicalantipsy      = isset($_POST['b_atypicalantipsy']) ? 1 : 0;
+$b_corticosteroids      = isset($_POST['b_corticosteroids']) ? 1 : 0;
+$b_impotence2           = isset($_POST['b_impotence2']) ? 1 : 0;
 $rati                   = ($_POST['rati']) ?? 0;
 $sbp                    = ($_POST['sbp']) ?? 0;
 $sbps5                  = ($_POST['sbps5']) ?? 0;
@@ -28,7 +27,7 @@ $weight                 = $_POST['weight'];
 $bmi                    = BMI($weight, $height);
 
 $b_type1 = $b_type2 = 0;
-switch ($diabetes_cat){
+switch ($diabetes_cat) {
     case 1:
         $b_type1 = 1;
         break;
@@ -37,87 +36,86 @@ switch ($diabetes_cat){
         break;
 }
 
-$result = femaleRisk( $age,$b_AF,$b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra,$b_renal,$b_semi, $b_sle, $b_treatedhyp, $b_type1,$b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, 11, 0);
+$result = femaleRisk($age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra, $b_renal, $b_semi, $b_sle, $b_treatedhyp, $b_type1, $b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, 10, 0);
 
 echo '<hr>result is: ';
 print_r($result);
 echo '<hr>';
 
-function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra, $b_renal, $b_semi, $b_sle, $b_treatedhyp, $b_type1, $b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, $surv = 10, $town = 0)
+function femaleRisk($age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra, $b_renal, $b_semi, $b_sle, $b_treatedhyp, $b_type1, $b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, $surv = 10, $town = 0)
 {
-
     $survivor = [
         0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0.988876402378082,
-		0,
-		0,
-		0,
-		0,
-		0
-	];
-
-	/* The conditional arrays */
-
-	$Iethrisk = [
         0,
-		0,
-		0.2804031433299542500000000,
-		0.5629899414207539800000000,
-		0.2959000085111651600000000,
-		0.0727853798779825450000000,
-		-0.1707213550885731700000000,
-		-0.3937104331487497100000000,
-		-0.3263249528353027200000000,
-		-0.1712705688324178400000000
-	];
-	$Ismoke = [
         0,
-		0.1338683378654626200000000,
-		0.5620085801243853700000000,
-		0.6674959337750254700000000,
-		0.8494817764483084700000000
-	];
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.988876402378082,
+        0,
+        0,
+        0,
+        0,
+        0
+    ];
 
-	/* Applying the fractional polynomial transforms */
-	/* (which includes scaling)                      */
+    /* The conditional arrays */
 
-	$dage = $age;
-	$dage=$dage/10;
-	$age_1 = pow($dage,-2);
-	$age_2 = $dage;
-	$dbmi = $bmi;
-	$dbmi=$dbmi/10;
-	$bmi_1 = pow($dbmi,-2);
-	$bmi_2 = pow($dbmi,-2)*log($dbmi);
+    $Iethrisk = [
+        0,
+        0,
+        0.2804031433299542500000000,
+        0.5629899414207539800000000,
+        0.2959000085111651600000000,
+        0.0727853798779825450000000,
+        -0.1707213550885731700000000,
+        -0.3937104331487497100000000,
+        -0.3263249528353027200000000,
+        -0.1712705688324178400000000
+    ];
+    $Ismoke = [
+        0,
+        0.1338683378654626200000000,
+        0.5620085801243853700000000,
+        0.6674959337750254700000000,
+        0.8494817764483084700000000
+    ];
 
-	/* Centring the continuous variables */
+    /* Applying the fractional polynomial transforms */
+    /* (which includes scaling)                      */
 
-	$age_1 = $age_1 - 0.053274843841791;
-	$age_2 = $age_2 - 4.332503318786621;
-	$bmi_1 = $bmi_1 - 0.154946178197861;
+    $dage = $age;
+    $dage=$dage/10;
+    $age_1 = pow($dage, -2);
+    $age_2 = $dage;
+    $dbmi = $bmi;
+    $dbmi=$dbmi/10;
+    $bmi_1 = pow($dbmi, -2);
+    $bmi_2 = pow($dbmi, -2)*log($dbmi);
+
+    /* Centring the continuous variables */
+
+    $age_1 = $age_1 - 0.053274843841791;
+    $age_2 = $age_2 - 4.332503318786621;
+    $bmi_1 = $bmi_1 - 0.154946178197861;
     $bmi_2 = $bmi_2 - 0.144462317228317;
     $rati = $rati - 3.476326465606690;
     $sbp = $sbp - 123.130012512207030;
     $sbps5 = $sbps5 - 9.002537727355957;
     $town = $town - 0.392308831214905;
 
-	/* Start of Sum */
+    /* Start of Sum */
     $a=0;
 
-	/* The conditional sums */
+    /* The conditional sums */
 
     $a += $Iethrisk[$ethrisk];
     $a += $Ismoke[$smoke_cat];
-	/* Sum from continuous values */
+    /* Sum from continuous values */
 
     $a += $age_1 * -8.1388109247726188000000000;
     $a += $age_2 * 0.7973337668969909800000000;
@@ -128,7 +126,7 @@ function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_mig
     $a += $sbps5 * 0.0078894541014586095000000;
     $a += $town * 0.0772237905885901080000000;
 
-	/* Sum from boolean values */
+    /* Sum from boolean values */
 
     $a += $b_AF * 1.5923354969269663000000000;
     $a += $b_atypicalantipsy * 0.2523764207011555700000000;
@@ -137,13 +135,13 @@ function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_mig
     $a += $b_ra * 0.2136480343518194200000000;
     $a += $b_renal * 0.6519456949384583300000000;
     $a += $b_semi * 0.1255530805882017800000000;
-	$a += $b_sle * 0.7588093865426769300000000;
+    $a += $b_sle * 0.7588093865426769300000000;
     $a += $b_treatedhyp * 0.5093159368342300400000000;
     $a += $b_type1 * 1.7267977510537347000000000;
     $a += $b_type2 * 1.0688773244615468000000000;
     $a += $fh_cvd * 0.4544531902089621300000000;
 
-	/* Sum from interaction terms */
+    /* Sum from interaction terms */
 
     $a += $age_1 * ($smoke_cat==1) * -4.7057161785851891000000000;
     $a += $age_1 * ($smoke_cat==2) * -2.7430383403573337000000000;
@@ -179,16 +177,21 @@ function femaleRisk( $age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_mig
     $a += $age_2 * $fh_cvd * -0.0768850516984230380000000;
     $a += $age_2 * $sbp * -0.0015082501423272358000000;
     $a += $age_2 * $town * -0.0315934146749623290000000;
-    echo "6 a is $a <br>";
-	/* Calculate the score itself */
-    $score = 100.0 * (1 - pow($survivor[$surv], exp($a)) );
+    /* Calculate the score itself */
+    $score = 100.0 * (1 - pow($survivor[$surv], exp($a)));
 
-	return $score;
+    return $score;
 }
 
 function BMI($weight, $height)
 {
     $heightInMeter = $height * 0.01;
     $BMI = ($weight / $heightInMeter) / $heightInMeter;
+
+    if ($BMI > 40) {
+        $BMI = 40;
+    } elseif ($BMI < 20) {
+        $BMI = 20;
+    }
     return floatval(number_format($BMI, 2));
 }
