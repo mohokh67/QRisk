@@ -3,8 +3,12 @@
 echo '<pre>';
 
 print_r($_POST);
+$error = array();
 $sex                    = $_POST['sex'];
 $age                    = $_POST['age'];
+if ($age < 25 && $age > 84) {
+    $error[] = "Age: enter an integer between 25 and 84";
+}
 $ethrisk                = $_POST['ethnicity'];
 $smoke_cat              = $_POST['smoke_cat'];
 $diabetes_cat           = $_POST['diabetes_cat'];
@@ -19,12 +23,39 @@ $b_semi                 = isset($_POST['b_semi']) ? 1 : 0;
 $b_atypicalantipsy      = isset($_POST['b_atypicalantipsy']) ? 1 : 0;
 $b_corticosteroids      = isset($_POST['b_corticosteroids']) ? 1 : 0;
 $b_impotence2           = isset($_POST['b_impotence2']) ? 1 : 0;
+
 $rati                   = ($_POST['rati']) ?? 0;
+if ($rati < 1 && $rati > 11) {
+    $error[] = "Cholesterol/HDL ratio: either leave blank or enter a number between 1.0 and 11.0";
+}
+
 $sbp                    = ($_POST['sbp']) ?? 0;
+if ($rati < 70 && $rati > 210) {
+    $error[] = "Systolic blood pressure: either leave blank or enter an integer between 70 and 210";
+}
+
 $sbps5                  = ($_POST['sbps5']) ?? 0;
-$height                 = $_POST['height'];
-$weight                 = $_POST['weight'];
+if ($rati < 0 && $rati > 40) {
+    $error[] = "Standard deviation of SBP: either leave blank or enter a value between 0.0 and 40.0";
+}
+
+$height                 = isset($_POST['height']) ?? 0;
+if ($height < 140 && $height > 210) {
+    $error[] = "Height: enter an integer between 140 and 210";
+}
+$weight                 = isset($_POST['weight']) ?? 0;
+if ($weight < 40 && $weight > 180) {
+    $error[] = "Weight: enter an integer between 40 and 180";
+}
+
+if ($height xor $weight) {
+    $error[] = "You have only entered one of height and weight: Please enter both or leave both blank.";
+}
 $bmi                    = BMI($weight, $height);
+
+
+//var error="HBA1c: enter a number between 20 and 240\n";
+
 
 $b_type1 = $b_type2 = 0;
 switch ($diabetes_cat) {
@@ -35,6 +66,7 @@ switch ($diabetes_cat) {
         $b_type2 = 1;
         break;
 }
+
 
 $result = femaleRisk($age, $b_AF, $b_atypicalantipsy, $b_corticosteroids, $b_migraine, $b_ra, $b_renal, $b_semi, $b_sle, $b_treatedhyp, $b_type1, $b_type2, $bmi, $ethrisk, $fh_cvd, $rati, $sbp, $sbps5, $smoke_cat, 10, 0);
 
@@ -188,6 +220,7 @@ function BMI($weight, $height)
     $heightInMeter = $height * 0.01;
     $BMI = ($weight / $heightInMeter) / $heightInMeter;
 
+    // It should return something between 20 to 40
     if ($BMI > 40) {
         $BMI = 40;
     } elseif ($BMI < 20) {
